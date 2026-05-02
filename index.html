@@ -8,67 +8,63 @@
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; }
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             background: var(--bg); color: var(--text); 
             margin: 0; display: flex; height: 100vh; overflow: hidden; 
         }
 
-        /* CỘT TRÁI - TÌM KIẾM & APPS */
+        /* LAYOUT CHIA 2 CỘT NHƯ HÌNH VẼ */
         .left-panel { width: 40%; border-right: 1px solid #334155; padding: 20px; display: flex; flex-direction: column; box-sizing: border-box; }
+        .right-panel { width: 60%; padding: 20px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }
+
+        /* INPUT TÌM KIẾM */
         .search-box { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--accent); background: var(--card); color: white; margin-bottom: 25px; outline: none; font-size: 16px; box-sizing: border-box; }
+        
+        /* GRID NÚT BẤM APPS */
         .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .app-btn { background: var(--card); border: 1px solid #475569; padding: 18px 10px; border-radius: 12px; text-align: center; cursor: pointer; font-weight: 500; transition: 0.2s; }
         .app-btn:hover { background: #2d3748; border-color: var(--accent); }
         .app-btn:active { transform: scale(0.95); background: var(--accent); color: black; }
 
-        /* CỘT PHẢI - CHỨC NĂNG */
-        .right-panel { width: 60%; padding: 20px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }
-        
+        /* CÁC THÀNH PHẦN BÊN PHẢI */
         .cam-sec { display: flex; gap: 12px; align-items: center; }
         .cam-btn { background: var(--card); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--accent); cursor: pointer; font-size: 20px; }
-        .cam-label { flex: 1; background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid #334155; font-size: 16px; }
+        .cam-label { flex: 1; background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid #334155; }
 
         .ai-sec { 
             background: linear-gradient(135deg, #6366f1, #38bdf8); 
             color: white; padding: 25px; border-radius: 15px; 
             font-weight: bold; text-align: center; font-size: 24px; 
             cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-            transition: 0.3s;
         }
-        .ai-sec:hover { opacity: 0.9; transform: translateY(-2px); }
 
         .bottom-sec { display: flex; gap: 20px; flex: 1; }
         .music-box { 
             flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 28px; font-weight: 800; cursor: pointer; color: #94a3b8;
-            transition: 0.3s;
         }
-        .music-box:hover { color: white; border-color: var(--accent); }
         
         .fav-box { flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; padding: 15px; }
-        .fav-title { margin: 0 0 10px 0; font-size: 18px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- CỘT TRÁI -->
     <div class="left-panel">
-        <input type="text" id="q" class="search-box" placeholder="Bạn muốn tìm gì?">
+        <input type="text" id="q" class="search-box" placeholder="Nhập từ khóa...">
         <div class="app-grid">
-            <div class="app-btn" onclick="openSearch('yt')">YouTube</div>
-            <div class="app-btn" onclick="openSearch('tk')">TikTok</div>
-            <div class="app-btn" onclick="openSearch('fb')">Facebook</div>
-            <div class="app-btn" onclick="openSearch('sp')">Shopee</div>
-            <div class="app-btn" onclick="openSearch('gg')">Google</div>
-            <div class="app-btn" onclick="openSearch('mp')">Maps</div>
+            <div class="app-btn" onclick="openLink('yt')">YouTube</div>
+            <div class="app-btn" onclick="openLink('tk')">TikTok</div>
+            <div class="app-btn" onclick="openLink('fb')">Facebook</div>
+            <div class="app-btn" onclick="openLink('sp')">Shopee</div>
+            <div class="app-btn" onclick="openLink('gg')">Google</div>
+            <div class="app-btn" onclick="openLink('mp')">Maps</div>
         </div>
     </div>
 
-    <!-- CỘT PHẢI -->
     <div class="right-panel">
         <div class="cam-sec">
-            <div class="cam-btn" onclick="alert('Tính năng camera đang được cập nhật...')">📷</div>
+            <div class="cam-btn">📷</div>
             <div class="cam-label">Chụp Ảnh</div>
         </div>
 
@@ -77,25 +73,26 @@
         </button>
 
         <div class="bottom-sec">
-            <div class="music-box" onclick="openSearch('sf')">NHẠC</div>
+            <div class="music-box" onclick="openLink('sf')">NHẠC</div>
             <div class="fav-box">
-                <h4 class="fav-title">TAB yêu thích</h4>
-                <div style="font-size: 13px; color: #64748b;">• Danh sách đang trống</div>
+                <h4 style="margin:0 0 10px 0">TAB yêu thích</h4>
+                <div style="font-size: 13px; color: #64748b;">• Danh sách trống</div>
             </div>
         </div>
     </div>
 
     <script>
-        function openSearch(platform) {
-            const keyword = document.getElementById('q').value;
-            if (!keyword && platform !== 'sf') {
-                alert("Vui lòng nhập từ khóa trước!");
+        function openLink(key) {
+            const val = document.getElementById('q').value;
+            if (!val && key !== 'sf') {
+                alert("Bạn chưa nhập nội dung tìm kiếm!");
                 return;
             }
 
-            const encoded = encodeURIComponent(keyword);
+            const query = encodeURIComponent(val);
             
-            const baseLinks = {
+            // CHỈ DÙNG LINK HTTPS ĐỂ KHÔNG BỊ BLOCK
+            const links = {
                 yt: 'https://www.youtube.com/results?search_query=',
                 tk: 'https://www.tiktok.com/search?q=',
                 fb: 'https://www.facebook.com/search/top/?q=',
@@ -105,9 +102,8 @@
                 sf: 'https://open.spotify.com/search/'
             };
 
-            // Sử dụng window.open để mở link web chuẩn. 
-            // Nếu trình duyệt hoặc điện thoại có cài app, nó sẽ tự động gợi ý mở app.
-            window.open(baseLinks[platform] + encoded, '_blank');
+            // Mở link trong cửa sổ mới của trình duyệt chính
+            window.open(links[key] + query, '_blank');
         }
     </script>
 </body>
