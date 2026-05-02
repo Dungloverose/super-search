@@ -3,134 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Search Super App</title>
+    <title>XD Super App</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        :root {
-            --primary: #2563eb;
-            --yt: #ff0000;
-            --sp: #1DB954;
-            --tk: #000000;
-            --fb: #1877F2;
-            --gm: #4285F4;
-            --sh: #ee4d2d;
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; }
+        body { 
+            font-family: sans-serif; background: var(--bg); color: var(--text); 
+            margin: 0; display: flex; height: 100vh; overflow: hidden; 
         }
-        body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 500px; }
-        .header { text-align: center; margin-bottom: 25px; }
-        
-        /* Search Box */
-        .search-wrapper { position: sticky; top: 10px; z-index: 100; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 10px; outline: none; font-size: 16px; transition: 0.3s; box-sizing: border-box; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(37,99,235,0.2); }
 
-        /* Grid System */
-        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        
-        /* App Cards */
-        .app-card { background: white; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 4px solid #ddd; }
-        .app-card:active { transform: scale(0.95); }
-        .app-card h4 { margin: 10px 0 5px 0; font-size: 14px; }
-        .app-card p { margin: 0; font-size: 11px; color: #666; }
+        /* CỘT TRÁI: TÌM KIẾM & APPS */
+        .left-panel { 
+            width: 40%; border-right: 1px solid #334155; 
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
+        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--accent); background: var(--card); color: white; margin-bottom: 20px; outline: none; }
+        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .app-btn { background: var(--card); border: 1px solid #334155; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; }
+        .app-btn:active { transform: scale(0.95); }
 
-        /* Custom Colors for Apps */
-        .yt-card { border-color: var(--yt); }
-        .sp-card { border-color: var(--sp); }
-        .tk-card { border-color: var(--tk); }
-        .fb-card { border-color: var(--fb); }
-        .gm-card { border-color: var(--gm); }
-        .sh-card { border-color: var(--sh); }
+        /* CỘT PHẢI: AI, NHẠC, CHỤP ẢNH */
+        .right-panel { width: 60%; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Khu vực Chụp ảnh */
+        .camera-sec { display: flex; gap: 10px; align-items: center; }
+        .cam-btn { background: var(--card); padding: 10px; border-radius: 10px; cursor: pointer; border: 1px solid var(--accent); }
+        .cam-label { flex: 1; background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid #334155; }
+
+        /* Khu vực AI Gemini */
+        .ai-sec { background: linear-gradient(90deg, #38bdf8, #818cf8); color: white; padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; font-size: 20px; cursor: pointer; }
+
+        /* Khu vực Nhạc & Tab yêu thích */
+        .bottom-sec { display: flex; gap: 15px; flex: 1; }
+        .music-box { flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
+        .fav-box { flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; padding: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h2>Super Search 🚀</h2>
-            <p>Nhập từ khóa và chọn nền tảng bạn muốn mở</p>
-        </div>
-
-        <div class="search-wrapper">
-            <input type="text" id="mainInput" placeholder="Bạn đang tìm gì thế?..." onkeyup="syncText()">
-        </div>
-
+    <!-- BÊN TRÁI -->
+    <div class="left-panel">
+        <input type="text" id="q" class="search-box" placeholder="TÌM KIẾM...">
         <div class="app-grid">
-            <div class="app-card yt-card" onclick="launch('youtube')">
-                <span style="font-size: 24px;">📺</span>
-                <h4>YouTube</h4>
-                <p id="t-yt">Tìm Video/MV</p>
-            </div>
+            <div class="app-btn" onclick="go('yt')">YouTube</div>
+            <div class="app-btn" onclick="go('fb')">Facebook</div>
+            <div class="app-btn" onclick="go('tk')">TikTok</div>
+            <div class="app-btn" onclick="go('sp')">Shopee</div>
+            <div class="app-btn" onclick="go('gg')">Google</div>
+            <div class="app-btn" onclick="go('mp')">Maps</div>
+        </div>
+    </div>
 
-            <div class="app-card sp-card" onclick="launch('spotify')">
-                <span style="font-size: 24px;">🎧</span>
-                <h4>Spotify</h4>
-                <p id="t-sp">Nghe nhạc</p>
-            </div>
+    <!-- BÊN PHẢI -->
+    <div class="right-panel">
+        <div class="camera-sec">
+            <div class="cam-btn" onclick="alert('Mở Camera...')">📷</div>
+            <div class="cam-label">Chụp Ảnh</div>
+        </div>
 
-            <div class="app-card tk-card" onclick="launch('tiktok')">
-                <span style="font-size: 24px;">📱</span>
-                <h4>TikTok</h4>
-                <p id="t-tk">Tìm Trend</p>
-            </div>
+        <div class="ai-sec" onclick="window.open('https://gemini.google.com/', '_blank')">
+            AI GEMINI
+        </div>
 
-            <div class="app-card gm-card" onclick="launch('maps')">
-                <span style="font-size: 24px;">📍</span>
-                <h4>Maps</h4>
-                <p id="t-gm">Tìm địa điểm</p>
-            </div>
-
-            <div class="app-card fb-card" onclick="launch('facebook')">
-                <span style="font-size: 24px;">👥</span>
-                <h4>Facebook</h4>
-                <p id="t-fb">Tìm bạn bè/nhóm</p>
-            </div>
-
-            <div class="app-card sh-card" onclick="launch('shopee')">
-                <span style="font-size: 24px;">🛍️</span>
-                <h4>Shopee</h4>
-                <p id="t-sh">Mua sắm ngay</p>
+        <div class="bottom-sec">
+            <div class="music-box" onclick="go('sf')">NHẠC</div>
+            <div class="fav-box">
+                <h4 style="margin:0 0 10px 0">TAB yêu thích</h4>
+                <p style="font-size: 12px; color: #94a3b8;">• Chỉnh sửa danh sách...</p>
             </div>
         </div>
     </div>
 
     <script>
-        function syncText() {
-            let val = document.getElementById('mainInput').value;
-            const targets = ['yt', 'sp', 'tk', 'gm', 'fb', 'sh'];
-            targets.forEach(t => {
-                document.getElementById('t-' + t).innerText = val ? "Tìm: " + val : "Chưa nhập từ khóa";
-            });
-        }
+        function go(app) {
+            const val = document.getElementById('q').value;
+            const encoded = encodeURIComponent(val);
+            
+            const urls = {
+                yt: { w: 'https://youtube.com/results?search_query=', a: 'youtube://results?search_query=' },
+                fb: { w: 'https://facebook.com/search/top/?q=', a: 'fb://search/?q=' },
+                tk: { w: 'https://tiktok.com/search?q=', a: 'snssdk1128://search?keyword=' },
+                sp: { w: 'https://shopee.vn/search?keyword=', a: 'shopeevn://search?keyword=' },
+                gg: { w: 'https://google.com/search?q=', a: 'googlechrome://' },
+                mp: { w: 'https://google.com/maps/search/', a: 'comgooglemaps://?q=' },
+                sf: { w: 'https://open.spotify.com/search/', a: 'spotify:search:' }
+            };
 
-        function launch(platform) {
-            let query = document.getElementById('mainInput').value;
-            if (!query) {
-                alert("Hãy nhập nội dung cần tìm trước nhé!");
-                return;
-            }
+            if (!val && app !== 'sf') return alert("Nhập nội dung tìm kiếm!");
 
-            let url = "";
-            let encoded = encodeURIComponent(query);
+            const start = Date.now();
+            // Thử mở App thật
+            window.location.href = urls[app].a + encoded;
 
-            switch(platform) {
-                case 'youtube': url = `https://www.youtube.com/results?search_query=${encoded}`; break;
-                case 'spotify': url = `spotify:search:${encoded}`; break;
-                case 'tiktok': url = `snssdk1233://search?keyword=${encoded}`; break; // Deep link TikTok
-                case 'maps': url = `https://www.google.com/maps/search/${encoded}`; break;
-                case 'facebook': url = `fb://search/top/?q=${encoded}`; break; // Deep link FB
-                case 'shopee': url = `https://shopee.vn/search?keyword=${encoded}`; break;
-            }
-
-            // Mở link
-            window.location.href = url;
-
-            // Fallback cho Deep links (nếu không có app thì mở web sau 1 giây)
-            if(platform === 'spotify' || platform === 'facebook' || platform === 'tiktok') {
-                setTimeout(() => {
-                    if (platform === 'spotify') window.location.href = `https://open.spotify.com/search/${encoded}`;
-                    if (platform === 'facebook') window.location.href = `https://www.facebook.com/search/top/?q=${encoded}`;
-                    if (platform === 'tiktok') window.location.href = `https://www.tiktok.com/search?q=${encoded}`;
-                }, 1000);
-            }
+            // Nếu không có App thì mở Web sau 0.5 giây
+            setTimeout(() => {
+                if (Date.now() - start < 800) {
+                    window.open(urls[app].w + encoded, '_blank');
+                }
+            }, 500);
         }
     </script>
 </body>
