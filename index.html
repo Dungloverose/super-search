@@ -3,129 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Search - Web Version</title>
+    <title>Super Search - Visual 2.0</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --yt: #ff0000; --sp: #1DB954; --tk: #000000;
-            --fb: #1877F2; --gm: #4285F4; --sh: #ee4d2d;
+            --primary-color: #4285f4;
+            --glass: rgba(255, 255, 255, 0.2);
         }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f8fafc; margin: 0; padding: 40px 20px; 
-            display: flex; flex-direction: column; align-items: center; 
-        }
-        .container { width: 100%; max-width: 600px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h2 { color: #1e293b; font-size: 2rem; margin-bottom: 10px; }
-        
-        .search-wrapper { 
-            background: white; padding: 20px; border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
-        }
-        input { 
-            width: 100%; padding: 18px; border: 2px solid #e2e8f0; 
-            border-radius: 15px; outline: none; font-size: 18px; 
-            transition: 0.3s; box-sizing: border-box; 
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
 
-        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .app-card { 
-            background: white; padding: 20px; border-radius: 15px; 
-            cursor: pointer; transition: all 0.2s ease; 
-            display: flex; flex-direction: column; align-items: center; 
-            border: 1px solid #e2e8f0; border-bottom: 5px solid #cbd5e1;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            overflow: hidden;
         }
-        .app-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .app-card:active { transform: translateY(0); }
-        .app-card h4 { margin: 12px 0 5px 0; font-size: 16px; color: #334155; }
-        .app-card p { margin: 0; font-size: 12px; color: #64748b; }
 
-        .yt-card { border-bottom-color: var(--yt); }
-        .sp-card { border-bottom-color: var(--sp); }
-        .tk-card { border-bottom-color: var(--tk); }
-        .gm-card { border-bottom-color: var(--gm); }
-        .fb-card { border-bottom-color: var(--fb); }
-        .sh-card { border-bottom-color: var(--sh); }
+        /* Giả lập khung hình Camera */
+        .camera-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Hiệu ứng quét (Scanning Beam) */
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+            box-shadow: 0 0 15px var(--primary-color);
+            top: 0;
+            animation: scan 3s infinite linear;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* Các điểm chạm thông minh (Smart Hotspots) */
+        .hotspot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            border: 4px solid var(--primary-color);
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+
+        /* Header thanh tìm kiếm */
+        .search-header {
+            width: 90%;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Nút chụp hình dưới cùng */
+        .controls {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .shutter-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            border: 5px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .shutter-btn:active {
+            transform: scale(0.9);
+            background: var(--primary-color);
+        }
+
+        .mode-selector {
+            margin-top: 15px;
+            color: white;
+            display: flex;
+            gap: 20px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .active-mode { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h2>Super Search 🚀</h2>
-            <p>Nhập nội dung và chọn nơi bạn muốn tìm</p>
-        </div>
+<div class="camera-container">
+    <div class="scanner-line"></div>
 
-        <div class="search-wrapper">
-            <input type="text" id="mainInput" placeholder="Bạn muốn tìm gì..." onkeyup="syncText()">
-        </div>
-
-        <div class="app-grid">
-            <div class="app-card yt-card" onclick="launch('youtube')">
-                <span style="font-size: 30px;">📺</span>
-                <h4>YouTube</h4>
-                <p id="t-yt">Tìm Video</p>
-            </div>
-            <div class="app-card sp-card" onclick="launch('spotify')">
-                <span style="font-size: 30px;">🎧</span>
-                <h4>Spotify</h4>
-                <p id="t-sp">Nghe nhạc</p>
-            </div>
-            <div class="app-card tk-card" onclick="launch('tiktok')">
-                <span style="font-size: 30px;">📱</span>
-                <h4>TikTok</h4>
-                <p id="t-tk">Tìm Trend</p>
-            </div>
-            <div class="app-card gm-card" onclick="launch('maps')">
-                <span style="font-size: 30px;">📍</span>
-                <h4>Maps</h4>
-                <p id="t-gm">Tìm địa điểm</p>
-            </div>
-            <div class="app-card fb-card" onclick="launch('facebook')">
-                <span style="font-size: 30px;">👥</span>
-                <h4>Facebook</h4>
-                <p id="t-fb">Tìm bạn bè</p>
-            </div>
-            <div class="app-card sh-card" onclick="launch('shopee')">
-                <span style="font-size: 30px;">🛍️</span>
-                <h4>Shopee</h4>
-                <p id="t-sh">Mua sắm</p>
-            </div>
-        </div>
+    <div class="search-header">
+        <span style="margin-left: 10px;">🔍 Đang phân tích vật thể...</span>
     </div>
 
-    <script>
-        function syncText() {
-            let val = document.getElementById('mainInput').value;
-            const targets = ['yt', 'sp', 'tk', 'gm', 'fb', 'sh'];
-            targets.forEach(t => {
-                document.getElementById('t-' + t).innerText = val ? "Tìm: " + val : "Chưa nhập từ khóa";
-            });
-        }
+    <!-- Giả lập các điểm AI nhận diện được -->
+    <div class="hotspot" style="top: 40%; left: 50%;" title="Đồng hồ thông minh"></div>
+    <div class="hotspot" style="top: 70%; left: 30%;" title="Bàn làm việc"></div>
 
-        function launch(platform) {
-            let query = document.getElementById('mainInput').value;
-            if (!query) {
-                alert("Hãy nhập nội dung cần tìm nhé!");
-                return;
-            }
-            let encoded = encodeURIComponent(query);
-            let url = "";
+    <div class="controls">
+        <button class="shutter-btn"></button>
+        <div class="mode-selector">
+            <span>DỊCH</span>
+            <span class="active-mode">TÌM KIẾM</span>
+            <span>MUA SẮM</span>
+        </div>
+    </div>
+</div>
 
-            switch(platform) {
-                case 'youtube': url = `https://www.youtube.com/results?search_query=${encoded}`; break;
-                case 'spotify': url = `https://open.spotify.com/search/${encoded}`; break;
-                case 'tiktok': url = `https://www.tiktok.com/search?q=${encoded}`; break;
-                case 'maps': url = `https://www.google.com/maps/search/${encoded}`; break;
-                case 'facebook': url = `https://www.facebook.com/search/top/?q=${encoded}`; break;
-                case 'shopee': url = `https://shopee.vn/search?keyword=${encoded}`; break;
-            }
-            // Mở trong tab mới của Chrome
-            window.open(url, '_blank');
-        }
-    </script>
+<script>
+    // Xử lý click vào điểm hotspot
+    document.querySelectorAll('.hotspot').forEach(item => {
+        item.addEventListener('click', () => {
+            alert('AI đang tìm kiếm thông tin về: ' + item.title);
+        });
+    });
+</script>
+
 </body>
 </html>
