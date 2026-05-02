@@ -2,56 +2,30 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XD Super App</title>
-    <link rel="manifest" href="manifest.json">
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: var(--bg); color: var(--text); 
-            margin: 0; display: flex; height: 100vh; overflow: hidden; 
-        }
-
-        /* LAYOUT CHIA 2 CỘT NHƯ HÌNH VẼ */
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .left-panel { width: 40%; border-right: 1px solid #334155; padding: 20px; display: flex; flex-direction: column; box-sizing: border-box; }
         .right-panel { width: 60%; padding: 20px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }
-
-        /* INPUT TÌM KIẾM */
         .search-box { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--accent); background: var(--card); color: white; margin-bottom: 25px; outline: none; font-size: 16px; box-sizing: border-box; }
-        
-        /* GRID NÚT BẤM APPS */
         .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .app-btn { background: var(--card); border: 1px solid #475569; padding: 18px 10px; border-radius: 12px; text-align: center; cursor: pointer; font-weight: 500; transition: 0.2s; }
         .app-btn:hover { background: #2d3748; border-color: var(--accent); }
-        .app-btn:active { transform: scale(0.95); background: var(--accent); color: black; }
-
-        /* CÁC THÀNH PHẦN BÊN PHẢI */
         .cam-sec { display: flex; gap: 12px; align-items: center; }
-        .cam-btn { background: var(--card); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--accent); cursor: pointer; font-size: 20px; }
+        .cam-btn { background: var(--card); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--accent); cursor: pointer; }
         .cam-label { flex: 1; background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid #334155; }
-
-        .ai-sec { 
-            background: linear-gradient(135deg, #6366f1, #38bdf8); 
-            color: white; padding: 25px; border-radius: 15px; 
-            font-weight: bold; text-align: center; font-size: 24px; 
-            cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-        }
-
+        .ai-sec { background: linear-gradient(135deg, #6366f1, #38bdf8); color: white; padding: 25px; border-radius: 15px; font-weight: bold; text-align: center; font-size: 24px; cursor: pointer; border: none; }
         .bottom-sec { display: flex; gap: 20px; flex: 1; }
-        .music-box { 
-            flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 28px; font-weight: 800; cursor: pointer; color: #94a3b8;
-        }
-        
+        .music-box { flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; cursor: pointer; color: #94a3b8; }
         .fav-box { flex: 1; background: var(--card); border-radius: 15px; border: 1px solid #334155; padding: 15px; }
     </style>
 </head>
 <body>
 
     <div class="left-panel">
-        <input type="text" id="q" class="search-box" placeholder="Nhập từ khóa...">
+        <input type="text" id="q" class="search-box" placeholder="Nhập nội dung...">
         <div class="app-grid">
             <div class="app-btn" onclick="openLink('yt')">YouTube</div>
             <div class="app-btn" onclick="openLink('tk')">TikTok</div>
@@ -67,16 +41,12 @@
             <div class="cam-btn">📷</div>
             <div class="cam-label">Chụp Ảnh</div>
         </div>
-
-        <button class="ai-sec" onclick="window.open('https://gemini.google.com/', '_blank')">
-            AI GEMINI
-        </button>
-
+        <button class="ai-sec" onclick="openLink('ai')">AI GEMINI</button>
         <div class="bottom-sec">
             <div class="music-box" onclick="openLink('sf')">NHẠC</div>
             <div class="fav-box">
-                <h4 style="margin:0 0 10px 0">TAB yêu thích</h4>
-                <div style="font-size: 13px; color: #64748b;">• Danh sách trống</div>
+                <h4 style="margin:0">TAB yêu thích</h4>
+                <p style="font-size:12px; color:#64748b">• Danh sách trống</p>
             </div>
         </div>
     </div>
@@ -84,14 +54,12 @@
     <script>
         function openLink(key) {
             const val = document.getElementById('q').value;
-            if (!val && key !== 'sf') {
+            if (!val && key !== 'sf' && key !== 'ai') {
                 alert("Bạn chưa nhập nội dung tìm kiếm!");
                 return;
             }
 
             const query = encodeURIComponent(val);
-            
-            // CHỈ DÙNG LINK HTTPS ĐỂ KHÔNG BỊ BLOCK
             const links = {
                 yt: 'https://www.youtube.com/results?search_query=',
                 tk: 'https://www.tiktok.com/search?q=',
@@ -99,11 +67,21 @@
                 sp: 'https://shopee.vn/search?keyword=',
                 gg: 'https://www.google.com/search?q=',
                 mp: 'https://www.google.com/maps/search/',
-                sf: 'https://open.spotify.com/search/'
+                sf: 'https://open.spotify.com/search/',
+                ai: 'https://gemini.google.com/'
             };
 
-            // Mở link trong cửa sổ mới của trình duyệt chính
-            window.open(links[key] + query, '_blank');
+            let finalUrl = links[key];
+            if (key !== 'ai' && key !== 'sf' || (key === 'sf' && val)) {
+                finalUrl += query;
+            }
+
+            // MẸO: Sử dụng thẻ <a> ẩn để "đánh lừa" trình đóng gói App mở trình duyệt ngoài
+            const a = document.createElement('a');
+            a.href = finalUrl;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.click();
         }
     </script>
 </body>
